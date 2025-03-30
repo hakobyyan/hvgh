@@ -1,5 +1,4 @@
 **/*.log
-**/*.pdf
 **/books
 **/.ipynb_checkpoints
 **/*.html
