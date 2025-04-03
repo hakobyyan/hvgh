@@ -27,7 +27,6 @@ def parse_data(text):
             try:
                 parts = line.split('│')[1:-1]  # Remove outer borders
                 if len(parts) != 3:
-                    print(f"Warning: Skipping malformed line in Z={z_value}: '{line}'")
                     continue
 
                 z = int(parts[0].strip())
@@ -67,7 +66,7 @@ def write_to_excel(data_dict, output_file='output.xlsx'):
 
 def main():
     try:
-        with open('tables_Manukyan_Version.txt', 'r', encoding='utf-8') as file:
+        with open('Distributor_tables.txt', 'r', encoding='utf-8') as file:
             text_data = file.read()
 
         parsed_data = parse_data(text_data)

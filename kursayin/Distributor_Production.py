@@ -20,7 +20,9 @@ class TripleDict:
 
     def print_as_table(self):
         """Prints the stored data in a table format."""
-        print(tabulate(self._store, headers=self.header, tablefmt="fancy_grid"))
+        # print(tabulate(self._store, headers=self.header, tablefmt="fancy_grid"))
+        # print data coma separated
+        print("\n".join([f"{key}, {value1}, {value2}" for key, value1, value2 in self._store]))
 
     def __repr__(self):
         """Represents the TripleDict contents."""
@@ -31,7 +33,7 @@ def compute_revenue_values(R, alpha, n, C):
     revenue_values = np.zeros((n, C + 1))
     for i in range(n):
         for x in range(1, C + 1):
-            revenue_values[i, x] = R[i] * (1 - np.exp(-alpha[i] * x)) ** x
+            revenue_values[i, x] = R[i] * (1-(1 - np.exp(-alpha[i] / x)) ** x)
     return revenue_values
 
 def print_table(data, headers, title):
@@ -47,6 +49,10 @@ def solve_resource_allocation(R, alpha, C, n):
     revenue_table = [[f"i={i + 1}"] + list(revenue_values[i, :]) for i in range(n)]
     headers = ["Prod\\Res"] + [f"c={j}" for j in range(C + 1)]
     print_table(revenue_table, headers, "Revenue Table:")
+
+    transpose = revenue_values.transpose()
+    header = ["Res\\Prod"] + [f"i={i}" for i in range(n)]
+    print_table(transpose, header, "Transpose:")
 
     def save_table_to_excel(data, headers, title, filename="output.xlsx", sheet_name="Sheet1"):
         """Save table to an Excel file with proper formatting."""
@@ -65,8 +71,8 @@ def solve_resource_allocation(R, alpha, C, n):
     # Example usage
     transposed_revenue = np.transpose(revenue_values)
     rev_table = [[f"c={j}"] + list(transposed_revenue[j, :]) for j in range(C + 1)]
-    headers = ["Res\\Prod"] + [f"i={i + 1}" for i in range(n)]
-    save_table_to_excel(rev_table, headers, "Revenue Table:", "revenue_table.xlsx")
+    headers_1 = ["Res\\Prod"] + [f"i={i + 1}" for i in range(n)]
+    save_table_to_excel(rev_table, headers_1, "Revenue Table:", "revenue_table.xlsx")
 
     data = []
     latex_content = r"""

@@ -31,7 +31,7 @@ def compute_revenue_values(R, alpha, n, C):
     revenue_values = np.zeros((n, C + 1))
     for i in range(n):
         for x in range(1, C + 1):
-            revenue_values[i, x] = R[i] * (1 - np.exp(-alpha[i] * x)) ** x
+            revenue_values[i, x] = R[i] * (1-(1 - np.exp(-alpha[i] / x)) ** x)
     return revenue_values
 
 
