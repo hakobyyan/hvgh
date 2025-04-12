@@ -147,7 +147,7 @@ def print_results(optimal_allocation, R, alpha, C, max_revenue):
     """Print the optimal allocation and resultant revenue."""
     print("\nOptimal Resource Allocation:")
     for i, x in enumerate(optimal_allocation):
-        revenue = R[i] * (1 - np.exp(-alpha[i] * x)) ** x
+        revenue = R[i] * (1-(1 - np.exp(-alpha[i] / x)) ** x)
         print(f"Customer {i + 1}: {x} resources -> Revenue: {revenue:.2f}")
     print(f"Total resources used: {sum(optimal_allocation)} out of {C}")
     print(f"Maximum revenue: {max_revenue:.2f}")
