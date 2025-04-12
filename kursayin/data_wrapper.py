@@ -1,7 +1,6 @@
 import pandas as pd
 import re
 
-
 def parse_data(text):
     # Split the text into separate tables based on the table headers
     tables = re.split(r'╒═══════╤═════════════════╤═══════╕', text)[1:]
@@ -63,7 +62,6 @@ def write_to_excel(data_dict, output_file='output.xlsx'):
                 max_length = max(df[col].astype(str).map(len).max(), len(col))
                 worksheet.set_column(i, i, max_length + 2)
 
-
 def main():
     try:
         with open('Distributor_tables.txt', 'r', encoding='utf-8') as file:
@@ -75,11 +73,8 @@ def main():
             print("No data was successfully parsed from the file.")
             return
 
-        write_to_excel(parsed_data, 'output.xlsx')
-        print("Data has been successfully written to output.xlsx")
+        write_to_excel(parsed_data, 'Distributor_tables.xlsx')
     except Exception as e:
         print(f"An error occurred: {str(e)}")
-
-
 if __name__ == "__main__":
     main()

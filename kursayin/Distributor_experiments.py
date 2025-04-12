@@ -1,6 +1,7 @@
 import sys
 import numpy as np
 from tabulate import tabulate
+import pandas as pd
 
 # Constants
 OUTPUT_FILE_PATH = 'Distributor_results.txt'
@@ -63,6 +64,26 @@ def print_table(data, headers, title):
     """
     print(title)
     print(tabulate(data, headers=headers, tablefmt=TABLE_FORMAT, floatfmt=FLOAT_FORMAT))
+
+
+def save_table_to_excel(data, headers, title, filename="output.xlsx", sheet_name="Sheet1"):
+    """Save a table to an Excel file.
+
+    Args:
+        data (list): Table data as a list of rows.
+        headers (list): Column headers.
+        title (str): Title to include in the Excel file.
+        filename (str): Output file name (default: 'output.xlsx').
+        sheet_name (str): Excel sheet name (default: 'Sheet1').
+    """
+    df = pd.DataFrame(data, columns=headers)
+    with pd.ExcelWriter(filename, engine="xlsxwriter") as writer:
+        df.to_excel(writer, sheet_name=sheet_name, index=False)
+        workbook = writer.book
+        worksheet = writer.sheets[sheet_name]
+        worksheet.write(0, 0, title)
+    print(f"Table saved to {filename}")
+
 
 def generate_latex(revenue_values, dp, allocation, n, C):
     """Generate a LaTeX document for DP calculations.
@@ -138,6 +159,12 @@ def solve_resource_allocation(R, alpha, C, n):
     headers = ["Prod\\Res"] + [f"c={j}" for j in range(C + 1)]
     revenue_table = [[f"i={i + 1}"] + list(revenue_values[i, :]) for i in range(n)]
     print_table(revenue_table, headers, "Revenue Table:")
+
+    # Save transposed revenue table to Excel
+    transposed_revenue = np.transpose(revenue_values)
+    rev_table = [[f"c={j}"] + list(transposed_revenue[j, :]) for j in range(C + 1)]
+    headers_transposed = ["Res\\Prod"] + [f"i={i + 1}" for i in range(n)]
+    save_table_to_excel(rev_table, headers_transposed, "Revenue Table:", "revenue_table.xlsx")
 
     # Fill DP and allocation tables
     dp, allocation = fill_dp_table(revenue_values, n, C)
